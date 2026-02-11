@@ -12,7 +12,7 @@ import { Toast } from "../components/Toast";
 import { Pagination, usePagination } from "../components/ui/Pagination";
 import { useProducts } from "../hooks/useProducts";
 
-export function ProductsPage() {
+export default function ProductsPage() {
   const queryClient = useQueryClient();
   const [query, setQuery] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
