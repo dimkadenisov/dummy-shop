@@ -2,24 +2,22 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { SortingState } from "@tanstack/react-table";
 import { useCallback, useState } from "react";
 import type { Product, ProductsResponse } from "../api/types";
-import RefreshIcon from "../assets/RefreshIcon";
-import AddProductModal from "../components/AddProductModal";
+import { RefreshIcon } from "../assets/RefreshIcon";
+import { AddProductModal } from "../components/AddProductModal";
 import { LogoutButton } from "../components/LogoutButton";
-import ProductTable from "../components/ProductTable";
-import ProgressBar from "../components/ProgressBar";
-import SearchBar from "../components/SearchBar";
-import Toast from "../components/Toast";
-import Pagination from "../components/ui/Pagination";
+import { ProductTable } from "../components/ProductTable";
+import { ProgressBar } from "../components/ProgressBar";
+import { SearchBar } from "../components/SearchBar";
+import { Toast } from "../components/Toast";
+import { Pagination, usePagination } from "../components/ui/Pagination";
 import { useProducts } from "../hooks/useProducts";
 
-const ITEMS_PER_PAGE = 10;
-
-export default function ProductsPage() {
+export function ProductsPage() {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [toastMsg, setToastMsg] = useState("");
+  const { page, setPage, resetPage, itemsPerPage } = usePagination();
 
   const { data, isPending, isFetching, refetch } = useProducts({
     page,
@@ -27,15 +25,21 @@ export default function ProductsPage() {
     sorting,
   });
 
-  const handleSearch = useCallback((q: string) => {
-    setQuery(q);
-    setPage(1);
-  }, []);
+  const handleSearch = useCallback(
+    (q: string) => {
+      setQuery(q);
+      resetPage();
+    },
+    [resetPage],
+  );
 
-  const handleSortingChange = useCallback((next: SortingState) => {
-    setSorting(next);
-    setPage(1);
-  }, []);
+  const handleSortingChange = useCallback(
+    (next: SortingState) => {
+      setSorting(next);
+      resetPage();
+    },
+    [resetPage],
+  );
 
   const handleAddProduct = useCallback(
     (
@@ -65,18 +69,13 @@ export default function ProductsPage() {
                 products: [newProduct],
                 total: 1,
                 skip: 0,
-                limit: ITEMS_PER_PAGE,
+                limit: itemsPerPage,
               },
       );
       setToastMsg("Товар добавлен");
     },
-    [queryClient, page, query, sorting],
+    [queryClient, page, query, sorting, itemsPerPage],
   );
-
-  const totalPages = Math.ceil((data?.total ?? 0) / ITEMS_PER_PAGE);
-  const showFrom =
-    (data?.total ?? 0) === 0 ? 0 : (page - 1) * ITEMS_PER_PAGE + 1;
-  const showTo = Math.min(page * ITEMS_PER_PAGE, data?.total ?? 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -117,16 +116,12 @@ export default function ProductsPage() {
             loading={isPending}
           />
 
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-            <span className="text-sm text-gray-500">
-              Показано {showFrom}-{showTo} из {data?.total}
-            </span>
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
-          </div>
+          <Pagination
+            itemsPerPage={itemsPerPage}
+            totalItems={data?.total}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </div>
 
