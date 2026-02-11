@@ -1,11 +1,11 @@
+import type { SortingState } from "@tanstack/react-table";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { SortingState } from "@tanstack/react-table";
-import type { Product } from "../types";
-import DataTable from "./ui/DataTable";
+import type { Product } from "../api/types";
+import { DataTable } from "./ui/DataTable";
 
 const col = createColumnHelper<Product>();
 
@@ -84,7 +84,7 @@ type Props = {
   loading?: boolean;
 };
 
-export default function ProductTable({
+export function ProductTable({
   products,
   sorting,
   onSortingChange,

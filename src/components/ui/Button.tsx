@@ -4,7 +4,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "ghost";
 };
 
-export default function Button({
+export function Button({
   variant = "primary",
   className = "",
   ...rest

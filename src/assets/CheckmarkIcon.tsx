@@ -1,4 +1,4 @@
-export default function CheckmarkIcon(props: React.SVGProps<SVGSVGElement>) {
+export function CheckmarkIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 10 8" fill="none" {...props}>
       <path

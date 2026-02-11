@@ -1,4 +1,4 @@
-export default function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
+export function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"

@@ -7,7 +7,7 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
   ref?: React.Ref<HTMLInputElement>;
 };
 
-export default function TextField({ label, error, ref, ...rest }: Props) {
+export function TextField({ label, error, ref, ...rest }: Props) {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">

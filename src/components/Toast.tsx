@@ -5,7 +5,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default function Toast({ message, onClose }: Props) {
+export function Toast({ message, onClose }: Props) {
   return (
     <ToastPrimitive.Provider swipeDirection="right">
       <ToastPrimitive.Root

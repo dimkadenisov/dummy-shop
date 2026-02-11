@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import { useAuth } from "../context/AuthContext";
 
-export default function LoginPage() {
+export function LoginPage() {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) return <Navigate to="/products" replace />;
 

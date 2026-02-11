@@ -1,4 +1,4 @@
-export default function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
+export function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 16 16" fill="none" {...props}>
       <path

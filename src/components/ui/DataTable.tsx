@@ -7,7 +7,7 @@ type DataTableProps<TData> = {
   emptyState?: ReactNode;
 };
 
-export default function DataTable<TData>({
+export function DataTable<TData>({
   table,
   isLoading,
   emptyState = "Нет данных",

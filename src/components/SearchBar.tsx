@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import SearchIcon from "../assets/SearchIcon";
+import { SearchIcon } from "../assets/SearchIcon";
 
 type Props = {
   onSearch: (query: string) => void;
 };
 
-export default function SearchBar({ onSearch }: Props) {
+export function SearchBar({ onSearch }: Props) {
   const [value, setValue] = useState("");
 
   useEffect(() => {

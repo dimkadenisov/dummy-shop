@@ -1,7 +1,7 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import CheckmarkIcon from "../../assets/CheckmarkIcon";
+import { CheckmarkIcon } from "../../assets/CheckmarkIcon";
 
 type Props<T extends FieldValues> = {
   name: FieldPath<T>;
@@ -9,7 +9,7 @@ type Props<T extends FieldValues> = {
   label: string;
 };
 
-export default function CheckboxField<T extends FieldValues>({
+export function CheckboxField<T extends FieldValues>({
   name,
   control,
   label,

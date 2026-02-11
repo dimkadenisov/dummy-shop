@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import type { Product } from "../api/types";
 import type { AddProductFormData } from "../schemas/addProductSchema";
 import { addProductSchema } from "../schemas/addProductSchema";
-import Button from "./ui/Button";
-import TextField from "./ui/TextField";
+import { Button } from "./ui/Button";
+import { TextField } from "./ui/TextField";
 
 type NewProduct = Omit<
   Product,
@@ -17,7 +17,7 @@ type Props = {
   onAdd: (product: NewProduct) => void;
 };
 
-export default function AddProductModal({ onAdd }: Props) {
+export function AddProductModal({ onAdd }: Props) {
   const [open, setOpen] = useState(false);
 
   const {
