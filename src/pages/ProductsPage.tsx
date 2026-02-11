@@ -21,7 +21,7 @@ export default function ProductsPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [toastMsg, setToastMsg] = useState("");
 
-  const { data, isPending, refetch } = useProducts({
+  const { data, isPending, isFetching, refetch } = useProducts({
     page,
     query,
     sorting,
@@ -103,7 +103,7 @@ export default function ProductsPage() {
                 className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-50"
               >
                 <RefreshIcon
-                  className={`w-5 h-5 ${isPending ? "animate-spin" : ""}`}
+                  className={`w-5 h-5 ${isFetching ? "animate-spin" : ""}`}
                 />
               </button>
               <AddProductModal onAdd={handleAddProduct} />
