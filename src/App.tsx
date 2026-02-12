@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { queryClient } from "./lib/queryClient";
@@ -29,6 +30,7 @@ export default function App() {
           </Suspense>
         </AuthProvider>
       </BrowserRouter>
+      <Toaster position="bottom-right" />
     </QueryClientProvider>
   );
 }

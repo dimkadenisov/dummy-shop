@@ -8,7 +8,7 @@ import { addProductSchema } from "../schemas/addProductSchema";
 import { Button } from "./ui/Button";
 import { TextField } from "./ui/TextField";
 
-type NewProduct = Omit<
+export type NewProduct = Omit<
   Product,
   "id" | "rating" | "stock" | "thumbnail" | "category"
 >;

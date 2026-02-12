@@ -1,21 +1,20 @@
-import { useQueryClient } from "@tanstack/react-query";
 import type { SortingState } from "@tanstack/react-table";
 import { useCallback, useState } from "react";
-import type { Product, ProductsResponse } from "../api/types";
+import { toast } from "sonner";
 import { RefreshIcon } from "../assets/RefreshIcon";
-import { AddProductModal } from "../components/AddProductModal";
+import {
+  AddProductModal,
+  type NewProduct,
+} from "../components/AddProductModal";
 import { LogoutButton } from "../components/LogoutButton";
 import { ProductsSearchBar } from "../components/ProductsSearchBar";
 import { ProductTable } from "../components/ProductTable";
 import { ProgressBar } from "../components/ProgressBar";
-import { Toast } from "../components/Toast";
 import { Pagination, usePagination } from "../components/ui/Pagination";
 import { useProducts } from "../hooks/useProducts";
 
 export default function ProductsPage() {
-  const queryClient = useQueryClient();
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [toastMsg, setToastMsg] = useState("");
   const { page, setPage, resetPage, itemsPerPage } = usePagination();
 
   const { data, isPending, isFetching, refetch } = useProducts({
@@ -31,45 +30,16 @@ export default function ProductsPage() {
     [resetPage],
   );
 
-  const handleAddProduct = useCallback(
-    (
-      product: Omit<
-        Product,
-        "id" | "rating" | "stock" | "thumbnail" | "category"
-      >,
-    ) => {
-      const newProduct: Product = {
-        ...product,
-        id: Date.now(),
-        rating: 0,
-        stock: 0,
-        thumbnail: "",
-        category: "",
-      };
-      queryClient.setQueryData<ProductsResponse>(
-        ["products", { page, sorting }],
-        (old) =>
-          old
-            ? {
-                ...old,
-                products: [newProduct, ...old.products],
-                total: old.total + 1,
-              }
-            : {
-                products: [newProduct],
-                total: 1,
-                skip: 0,
-                limit: itemsPerPage,
-              },
-      );
-      setToastMsg("Товар добавлен");
-    },
-    [queryClient, page, sorting, itemsPerPage],
-  );
+  const handleAddProduct = useCallback((product: NewProduct) => {
+    // какая-то реальная логика
+    console.log(product);
+    toast.success(`Продукт ${product.title} добавлен`);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <ProgressBar loading={isPending} />
+
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center gap-6 mb-6">
           <h1 className="text-2xl font-bold text-gray-900 shrink-0">Товары</h1>
@@ -91,6 +61,7 @@ export default function ProductsPage() {
                   className={`w-5 h-5 ${isFetching ? "animate-spin" : ""}`}
                 />
               </button>
+
               <AddProductModal onAdd={handleAddProduct} />
             </div>
           </div>
@@ -111,7 +82,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <Toast message={toastMsg} onClose={() => setToastMsg("")} />
     </div>
   );
 }
