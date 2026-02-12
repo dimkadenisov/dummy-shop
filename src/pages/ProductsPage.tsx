@@ -5,33 +5,23 @@ import type { Product, ProductsResponse } from "../api/types";
 import { RefreshIcon } from "../assets/RefreshIcon";
 import { AddProductModal } from "../components/AddProductModal";
 import { LogoutButton } from "../components/LogoutButton";
+import { ProductsSearchBar } from "../components/ProductsSearchBar";
 import { ProductTable } from "../components/ProductTable";
 import { ProgressBar } from "../components/ProgressBar";
-import { SearchBar } from "../components/SearchBar";
 import { Toast } from "../components/Toast";
 import { Pagination, usePagination } from "../components/ui/Pagination";
 import { useProducts } from "../hooks/useProducts";
 
 export default function ProductsPage() {
   const queryClient = useQueryClient();
-  const [query, setQuery] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [toastMsg, setToastMsg] = useState("");
   const { page, setPage, resetPage, itemsPerPage } = usePagination();
 
   const { data, isPending, isFetching, refetch } = useProducts({
     page,
-    query,
     sorting,
   });
-
-  const handleSearch = useCallback(
-    (q: string) => {
-      setQuery(q);
-      resetPage();
-    },
-    [resetPage],
-  );
 
   const handleSortingChange = useCallback(
     (next: SortingState) => {
@@ -57,7 +47,7 @@ export default function ProductsPage() {
         category: "",
       };
       queryClient.setQueryData<ProductsResponse>(
-        ["products", { page, query, sorting }],
+        ["products", { page, sorting }],
         (old) =>
           old
             ? {
@@ -74,26 +64,22 @@ export default function ProductsPage() {
       );
       setToastMsg("Товар добавлен");
     },
-    [queryClient, page, query, sorting, itemsPerPage],
+    [queryClient, page, sorting, itemsPerPage],
   );
 
   return (
     <div className="min-h-screen bg-gray-50">
       <ProgressBar loading={isPending} />
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Товары</h1>
+        <div className="flex items-center gap-6 mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 shrink-0">Товары</h1>
+          <ProductsSearchBar />
           <LogoutButton />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <div className="flex items-center gap-3">
-              <SearchBar onSearch={handleSearch} />
-              <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
-                Все позиции
-              </span>
-            </div>
+            <span className="font-semibold text-gray-900">Все позиции</span>
             <div className="flex items-center gap-2">
               <button
                 type="button"

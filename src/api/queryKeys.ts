@@ -10,5 +10,6 @@ export const queryKeys = {
       "list",
       requestConfig,
     ],
+    search: (q: string) => ["product", "search", q],
   },
 } as const;

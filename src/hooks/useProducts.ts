@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { SortingState } from "@tanstack/react-table";
-import type { GetProductsParams } from "../api/products";
-import { getProducts, searchProducts } from "../api/products";
+import { getProducts } from "../api/products";
 import { queryKeys } from "../api/queryKeys";
-import type { SortField, SortOrder } from "../types";
+import type { GetProductsParams, SortField, SortOrder } from "../api/types";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -16,12 +15,8 @@ function sortingStateToApi(sorting: SortingState): {
   return { sortBy: id as SortField, order: desc ? "desc" : "asc" };
 }
 
-export function useProducts(params: {
-  page: number;
-  query: string;
-  sorting: SortingState;
-}) {
-  const { page, query, sorting } = params;
+export function useProducts(params: { page: number; sorting: SortingState }) {
+  const { page, sorting } = params;
 
   const apiParams: GetProductsParams = {
     limit: ITEMS_PER_PAGE,
@@ -31,7 +26,6 @@ export function useProducts(params: {
 
   return useQuery({
     queryKey: queryKeys.product.list(apiParams),
-    queryFn: () =>
-      query ? searchProducts(query, apiParams) : getProducts(apiParams),
+    queryFn: () => getProducts(apiParams),
   });
 }
