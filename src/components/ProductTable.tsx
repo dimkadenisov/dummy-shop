@@ -1,10 +1,13 @@
-import type { SortingState } from "@tanstack/react-table";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import type { RowSelectionState, SortingState } from "@tanstack/react-table";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useState } from "react";
 import type { Product } from "../api/types";
+import { CheckmarkIcon } from "../assets/CheckmarkIcon";
 import { DataTable } from "./ui/DataTable";
 
 const col = createColumnHelper<Product>();
@@ -13,8 +16,32 @@ const columns = [
   col.display({
     id: "checkbox",
     meta: { narrow: true },
-    header: () => <input type="checkbox" className="rounded border-gray-300" />,
-    cell: () => <input type="checkbox" className="rounded border-gray-300" />,
+    header: ({ table }) => {
+      const allSelected = table.getIsAllRowsSelected();
+      const someSelected = table.getIsSomeRowsSelected();
+      return (
+        <Checkbox.Root
+          checked={someSelected ? "indeterminate" : allSelected}
+          onCheckedChange={(v) => table.toggleAllRowsSelected(Boolean(v))}
+          className="h-4 w-4 rounded border border-gray-300 flex items-center justify-center data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600 data-[state=indeterminate]:bg-indigo-600 data-[state=indeterminate]:border-indigo-600"
+        >
+          <Checkbox.Indicator>
+            <CheckmarkIcon width="10" height="10" />
+          </Checkbox.Indicator>
+        </Checkbox.Root>
+      );
+    },
+    cell: ({ row }) => (
+      <Checkbox.Root
+        checked={row.getIsSelected()}
+        onCheckedChange={(v) => row.toggleSelected(Boolean(v))}
+        className="h-4 w-4 rounded border border-gray-300 flex items-center justify-center data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+      >
+        <Checkbox.Indicator>
+          <CheckmarkIcon width="10" height="10" />
+        </Checkbox.Indicator>
+      </Checkbox.Root>
+    ),
   }),
   col.accessor("title", {
     header: "Наименование",
@@ -90,14 +117,17 @@ export function ProductTable({
   onSortingChange,
   loading,
 }: Props) {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
   const table = useReactTable({
     data: products,
     columns,
-    state: { sorting },
+    state: { sorting, rowSelection },
     onSortingChange: (updater) => {
       const next = typeof updater === "function" ? updater(sorting) : updater;
       onSortingChange(next);
     },
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     manualSorting: true,
   });
